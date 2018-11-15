@@ -12,7 +12,24 @@ const app = express()
 
 const server = http.createServer(app);
 
+const REQUIRED_ENVIRONMENT_SETTINGS = [
+    {name:"KAFKA_SERVER" , message:"with the IP address of the Kafka Server to which the application should publish"},
+    {name:"KAFKA_TOPIC" , message:"with the name of the Kafka Topic to which the application should publish"},
+    {name:"TWITTER_CONSUMER_KEY" , message:"with the consumer key for a set of Twitter client credentials"},
+    {name:"TWITTER_CONSUMER_SECRET" , message:"with the consumer secret for a set of Twitter client credentials"},
+    {name:"TWITTER_ACCESS_TOKEN_KEY" , message:"with the access token key for a set of Twitter client credentials"},
+    {name:"TWITTER_ACCESS_TOKEN_SECRET" , message:"with the access token secret for a set of Twitter client credentials"},
+]
 
+for(var env of REQUIRED_ENVIRONMENT_SETTINGS) {
+  if (!process.env[env.name]) {
+    console.error(`Environment variable ${env.name} should be set: ${env.message}`);  
+  }
+}
+
+
+console.log("Topic "+process.env.KAFKA_TOPIC)
+console.log("Kafka Server "+process.env.KAFKA_SERVER)
 
 server.listen(PORT, function listening() {
     console.log('Listening on %d', server.address().port);
@@ -58,5 +75,5 @@ app.get('/order', function (req, res) {
 
 eventBusPublisher = require("./EventPublisher.js");
 // from the Oracle Event Hub - Platform Cluster Connect Descriptor
-var topicName = "idcs-1d61df536acb4e9d929e79a92f3414b5-customerstopic";
+var topicName = process.env.KAFKA_TOPIC || "ordersTopic";
 var tweet = require("./tweet");

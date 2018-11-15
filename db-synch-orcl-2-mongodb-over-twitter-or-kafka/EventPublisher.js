@@ -3,7 +3,7 @@ var kafka = require('kafka-node');
 var eventPublisher = module.exports;
 
 // from the Oracle Event Hub - Platform Cluster Connect Descriptor
-var kafkaConnectDescriptor = process.env.EVENT_HUB_PUBLIC_IP||"129.xxx";
+var kafkaConnectDescriptor = process.env.KAFKA_SERVER||"129.xxx";
 var Producer = kafka.Producer
 
 var APP_VERSION = "0.8.3"
