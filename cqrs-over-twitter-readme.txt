@@ -5,18 +5,12 @@ Preparation
 - create Kafka Topic on a Kafka Cluster
 - create a Twitter account and App client credentials
 
-
-Run ngrok
-
-ngrok http 3000
-
-Get the ngrok endpoint
-
-open oracle-ddl.SQL
-inject ngrok endpoint
+Run Node.js application in directory db-synch-orcl-2-mongodb-over-twitter-or-kafka on some cloud environment
+(or locally and optionally use ngrok or localtunnel to make accessible to HTTP requests from the Oracle Database)
+now Node application is listening, ready to receive GET requests from the database (or anyone else) for new orders and  publish Tweets for the orders (with JSON content)
 
 open sys-prepare-ddl.SQL
-inject ngrok endpoint
+inject the Node application's endpoint in the PL/SQL code
 
 Open SQL Developer
 
@@ -25,19 +19,18 @@ run sys-prepare-ddl.SQL (at least salient pieces)
 
 
 Connect to Jose-DBaaS-OrderMS (C##ORDERMS)
+inject the application's endpoint in the PL/SQL code
 run oracle-ddl.SQL (at least salient pieces)
 
-commandline, goto /db-synch-orcl-2-mongodb-over-twitter-or-kafka
 
-run 
-node index.js
-
-now at localhost port 3000 - a Node application is listening, ready to receive GET requests from the database (or anyone else) for new orders and  publish Tweets for the orders (with JSON content)
-
-commandline, /db-synch-to-mongodb-over-twitter-or-kafka
+commandline, cd to /db-synch-to-mongodb-over-twitter-or-kafka
 
 run
 node index.js
+
+
+(or of course run this node application on the cloud as well - either as Serverless Function or as constantly running application)
+
 
 Now an application is listening to both Twitter and Kafka Topic; for any Tweet or Event (for new orders) it will create a new Order document in MongoDB
 

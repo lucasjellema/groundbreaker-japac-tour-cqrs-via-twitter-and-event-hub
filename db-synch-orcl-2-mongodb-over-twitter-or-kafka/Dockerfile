@@ -8,12 +8,20 @@
 #    {name:"TWITTER_CONSUMER_SECRET" , message:"with the consumer secret for a set of Twitter client credentials"},
 #    {name:"TWITTER_ACCESS_TOKEN_KEY" , message:"with the access token key for a set of Twitter client credentials"},
 #    {name:"TWITTER_ACCESS_TOKEN_SECRET" , message:"with the access token secret for a set of Twitter client credentials"},
+#    {name:"TWITTER_HASHTAG" , message:"with the value for the twitter hashtag to use when publishing tweets"},
 
 # docker build -t <your username>/http-to-twitter-app .
 # docker build -t lucasjellema/http-to-twitter-app .
 
 # to run the container, exposing port 8080 in the container at 8090 in the host :
 # docker run -p 8090:8080  -e KAFKA_SERVER=127.1.1.1 -e KAFKA_TOPIC=topic -e TWITTER_CONSUMER_KEY=818 -e TWITTER_CONSUMER_SECRET=secret -e TWITTER_ACCESS_TOKEN_KEY=tokenkey -e TWITTER_ACCESS_TOKEN_SECRET=secret  lucasjellema/http-to-twitter-app
+
+# then tag the container:
+# docker tag lucasjellema/http-to-twitter-app:latest lucasjellema/http-to-twitter-app:0.9
+
+# and push it to Docker Hub (after logging in to Docker Hub: docker login)
+# docker push lucasjellema/http-to-twitter-app:0.9
+
 
 FROM node:10.13.0-alpine
 
