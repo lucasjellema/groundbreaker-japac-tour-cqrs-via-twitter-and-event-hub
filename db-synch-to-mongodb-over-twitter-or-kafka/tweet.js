@@ -10,7 +10,7 @@ var T = new Twit({
   timeout_ms: 60 * 1000,
 });
 
-var twitterHashTag = "#japacorderevent"
+var twitterHashTag = process.env.TWITTER_HASHTAG||"#Trump";
 
 var tracks = { track: [twitterHashTag] };
 let tweetStream = T.stream('statuses/filter', tracks)
@@ -32,17 +32,12 @@ function tweetstream(hashtags, tweetStream) {
 
 
 function processTweetEvent(tweet) {
-  // find out which of the original hashtags { track: ['oraclecode', 'javaone', 'oow17'] } in the hashtags for this tweet; 
-  //that is the one for the tagFilter property
-  // select one other hashtag from tweet.entities.hashtags to set in property hashtag
-  var tagFilter = "#japacorderevent";
+  console.log("tweet text " + tweet.extended_tweet.full_text.substring(twitterHashTag.length));
+  // var order = JSON.parse(tweet.extended_tweet.full_text.substring(twitterHashTag.length));
 
-  console.log("tweet text " + tweet.extended_tweet.full_text.substring(16));
-  var order = JSON.parse(tweet.extended_tweet.full_text.substring(16));
+  // console.log("Order from Tweet is " + order);
+  // console.log("Order from Tweet is " + JSON.stringify(order));
 
-  console.log("Order from Tweet is " + order);
-  console.log("Order from Tweet is " + JSON.stringify(order));
-
-  order.id = order.orderId;
-  ordersAPI.insertOrderIntoDatabase(order)
+  // order.id = order.orderId;
+  // ordersAPI.insertOrderIntoDatabase(order)
 }

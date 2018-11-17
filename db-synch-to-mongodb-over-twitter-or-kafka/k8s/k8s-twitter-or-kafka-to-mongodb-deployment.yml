@@ -1,0 +1,111 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: cqrs-from-twitter-or-kafka-to-mongodb
+  namespace: cqrs-demo
+  labels:
+    k8s-app: cqrs-from-twitter-or-kafka-to-mongodb
+    kubernetes.io/name: cqrs-from-twitter-or-kafka-to-mongodb
+spec:
+  selector:
+    k8s-app: cqrs-from-twitter-or-kafka-to-mongodb
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: cqrs-lsnr-port
+  type: LoadBalancer
+  # with type LoadBalancer, an external IP will be assigned - if the K8S provider supports that capability, such as OKE
+  # with type NodePort, a port is exposed on the cluster; whether that can be accessed or not depends on the cluster configuration; on Minikube it can be, in many other cases an IngressController may have to be configured  
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: 
+  labels: 
+    k8s-app: cqrs-from-twitter-or-kafka-to-mongodb
+  name: cqrs-from-twitter-or-kafka-to-mongodb
+  namespace: cqrs-demo
+spec: 
+  replicas: 1
+  strategy: 
+    rollingUpdate: 
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template: 
+    metadata: 
+      labels: 
+        k8s-app: cqrs-from-twitter-or-kafka-to-mongodb
+    spec: 
+      hostAliases:
+      - ip: "104.244.42.66"
+        hostnames:
+        - "api.twitter.com"
+      - ip: "35.153.105.141"
+        hostnames:
+        - "ds139791.mlab.com"
+      containers: 
+        - 
+          image: "lucasjellema/cqrs-from-twitter-or-kafka-to-mongodb:0.9"
+          imagePullPolicy: Always
+          name: cqrs-from-twitter-or-kafka-to-mongodb
+          ports: 
+            - 
+              containerPort: 8085
+              name: cqrs-lsnr-port
+              protocol: TCP
+          env: 
+            - 
+              name: MONGODB_DATABASE
+              value: "world"
+            - 
+              name: MONGODB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: mongodb-host
+            - 
+              name: MONGODB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: mongodb-port
+            - 
+              name: TWITTER_HASHTAG
+              value: "#GroundbreakersTourOrderEvent"
+            - 
+              name: TWITTER_CONSUMER_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: twitter-app-credentials-secret
+                  key: CONSUMER_KEY
+            - 
+              name: TWITTER_CONSUMER_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: twitter-app-credentials-secret
+                  key: CONSUMER_SECRET
+            - 
+              name: TWITTER_ACCESS_TOKEN_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: twitter-app-credentials-secret
+                  key: ACCESS_TOKEN_KEY
+            - 
+              name: TWITTER_ACCESS_TOKEN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: twitter-app-credentials-secret
+                  key: ACCESS_TOKEN_SECRET
+            - 
+              name: KAFKA_SERVER
+              valueFrom:
+                secretKeyRef:
+                  name: kafka-server-secret
+                  key: kafka-server-endpoint
+            - 
+              name: KAFKA_TOPIC
+              valueFrom:
+                secretKeyRef:
+                  name: kafka-server-secret
+                  key: kafka-topic
+

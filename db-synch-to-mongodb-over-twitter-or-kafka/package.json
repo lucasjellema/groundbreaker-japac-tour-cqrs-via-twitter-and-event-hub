@@ -4,6 +4,7 @@
   "description": "Run with node index.js",
   "main": "index.js",
   "scripts": {
+    "start": "(export NODE_ENV=test) || (set SOME_VAR=some-value && set OTHER_VAR=OTHER_VALUE  )&& node index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

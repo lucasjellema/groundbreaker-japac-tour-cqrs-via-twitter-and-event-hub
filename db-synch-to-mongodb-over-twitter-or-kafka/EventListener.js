@@ -18,9 +18,8 @@ eventListener.subscribeToEvents = function (callback) {
     subscribers.push(callback);
 }
 
-var topicName =  "topic";
-
-var kafkaConnectDescriptor = process.env.EVENT_HUB_PUBLIC_IP;
+var topicName =  process.env.KAFKA_TOPIC;
+var kafkaConnectDescriptor = process.env.KAFKA_SERVER;
 
 var consumerOptions = {
     host: kafkaConnectDescriptor,
@@ -55,13 +54,17 @@ consumer.addTopics([
 
 
 function onMessage(message) {
+    try {
+    console.log('Message received '+message)
     console.log('%s read msg Topic="%s" Partition=%s Offset=%d', this.client.clientId, message.topic, message.partition, message.offset);
     console.log("Message Value " + message.value)
 
     subscribers.forEach((subscriber) => {
+        console.log("send message to subscriber")
         subscriber(message.value);
 
     })
+} catch (e) {console.error('Exception in processing message '+e)}
 }
 
 function onError(error) {
