@@ -33,11 +33,10 @@ function tweetstream(hashtags, tweetStream) {
 
 function processTweetEvent(tweet) {
   console.log("tweet text " + tweet.extended_tweet.full_text.substring(twitterHashTag.length));
-  // var order = JSON.parse(tweet.extended_tweet.full_text.substring(twitterHashTag.length));
+  var order = JSON.parse(tweet.extended_tweet.full_text.substring(twitterHashTag.length));
 
-  // console.log("Order from Tweet is " + order);
-  // console.log("Order from Tweet is " + JSON.stringify(order));
+  console.log("Order from Tweet is " + JSON.stringify(order));
 
-  // order.id = order.orderId;
-  // ordersAPI.insertOrderIntoDatabase(order)
+  order.id = order.orderId;
+  ordersAPI.insertOrderIntoDatabase(order)
 }
